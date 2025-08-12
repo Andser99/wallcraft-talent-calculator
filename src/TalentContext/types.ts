@@ -35,6 +35,7 @@ export interface Talent {
   pos: Position;
   icon: string;
   description: (points: number) => string;
+  descriptions: string[];
   maxRank: number;
   reqPoints: number;
   prereq?: string;

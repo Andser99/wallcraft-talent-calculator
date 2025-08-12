@@ -43,5 +43,6 @@
     "@types/webpack-env": "^1.14.1",
     "react-scripts": "^5.0.1",
     "typescript": "^3.7.3"
-  }
+  },
+  "type": "commonjs"
 }

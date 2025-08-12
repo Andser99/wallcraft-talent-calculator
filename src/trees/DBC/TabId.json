@@ -1,8 +1,43 @@
 {
-    "META_INFO": "Fill in with correct tabIds and class/spec names for easier reference",
+    "283": {
+        "Class": "Druid",
+        "Talents": "Balance"
+    },
+    "281": {
+        "Class": "Druid",
+        "Talents": "Feral"
+    },
+    "282": {
+        "Class": "Druid",
+        "Talents": "Restoration"
+    },
+    "363": {
+        "Class": "Hunter",
+        "Talents": "Marksmanship"
+    },
+    "361": {
+        "Class": "Hunter",
+        "Talents": "Beast Mastery"
+    },
+    "362": {
+        "Class": "Hunter",
+        "Talents": "Survival"
+    },
+    "81": {
+        "Class": "Mage",
+        "Talents": "Arcane"
+    },
     "41": {
         "Class": "Mage",
         "Talents": "Fire"
+    },
+    "61": {
+        "Class": "Mage",
+        "Talents": "Frost"
+    },
+    "382": {
+        "Class": "Paladin",
+        "Talents": "Holy"
     },
     "383": {
         "Class": "Paladin",
@@ -12,9 +47,64 @@
         "Class": "Paladin",
         "Talents": "Retribution"
     },
-    "361": {
-        "Class": "Hunter",
-        "Talents": "Beast Mastery"
+    "201": {
+        "Class": "Priest",
+        "Talents": "Discipline"
     },
-
+    "202": {
+        "Class": "Priest",
+        "Talents": "Holy"
+    },
+    "203": {
+        "Class": "Priest",
+        "Talents": "Shadow"
+    },
+    "182": {
+        "Class": "Rogue",
+        "Talents": "Assassination"
+    },
+    "181": {
+        "Class": "Rogue",
+        "Talents": "Combat"
+    },
+    "183": {
+        "Class": "Rogue",
+        "Talents": "Subtlety"
+    },
+    "263": {
+        "Class": "Shaman",
+        "Talents": "Enhancement"
+    },
+    "261": {
+        "Class": "Shaman",
+        "Talents": "Elemental"
+    },
+    "262": {
+        "Class": "Shaman",
+        "Talents": "Restoration"
+    },
+    "302": {
+        "Class": "Warlock",
+        "Talents": "Affliction"
+    },
+    "303": {
+        "Class": "Warlock",
+        "Talents": "Demonology"
+    },
+    "301": {
+        "Class": "Warlock",
+        "Talents": "Destruction"
+    },
+    "161": {
+        "Class": "Warrior",
+        "Talents": "Arms"
+    },
+    "164": {
+        "Class": "Warrior",
+        "Talents": "Fury"
+    },
+    "163": {
+        "Class": "Warrior",
+        "Talents": "Protection"
+    }
 }
