@@ -1,10 +1,56 @@
 import { TalentData } from "../../TalentContext";
 import { talentText, requireAll } from "../../utils";
+import { addTalentsForTabId } from "../builder";
 
 const backgrounds = requireAll(
   require.context("../../assets/tree-backgrounds/paladin"),
 );
 const icons = requireAll(require.context("../../assets/icons/paladin"));
+
+function GetHolyTree(){
+  let tabId = 381;
+  let treeName = "Holy";
+  let tree: TalentData = {
+    "Holy":
+    {
+      name: treeName,
+      "background": backgrounds[treeName.toLowerCase()],
+      "icon": icons["spell_holy_holybolt"],
+      "talents": {}
+    }};
+  addTalentsForTabId(tree, tabId, treeName, icons);
+  return tree[treeName];
+}
+
+function GetProtTree(){
+  let tabId = 381;
+  let treeName = "Protection";
+  let tree: TalentData = {
+    "Protection":
+    {
+      name: treeName,
+      "background": backgrounds[treeName.toLowerCase()],
+      "icon": icons["spell_holy_devotionaura"],
+      "talents": {}
+    }};
+  addTalentsForTabId(tree, tabId, treeName, icons);
+  return tree[treeName];
+}
+
+function GetRetTree(){
+  let tabId = 381;
+  let treeName = "Retribution";
+  let tree: TalentData = {
+    "Retribution":
+    {
+      name: treeName,
+      "background": backgrounds[treeName.toLowerCase()],
+      "icon": icons["spell_holy_auraoflight"],
+      "talents": {}
+    }};
+  addTalentsForTabId(tree, tabId, treeName, icons);
+  return tree[treeName];
+}
 
 export const data: TalentData = {
   Holy: {
@@ -817,4 +863,7 @@ export const data: TalentData = {
       },
     },
   },
+  HolyTest: GetHolyTree(),
+  ProtectionTest: GetProtTree(),
+  RetributionTest: GetRetTree()
 };

@@ -2,6 +2,7 @@ import {
   Position as _Position,
   ArrowDir as _ArrowDir,
   TalentData as _TalentData,
+  Talent as _Talent
 } from "./types";
 
 export { createTalentProvider, useTalentContext } from "./TalentContext";
@@ -24,3 +25,4 @@ export { getStateFromHash, getHashFromState } from "./encoding";
 export type Position = _Position;
 export type ArrowDir = _ArrowDir;
 export type TalentData = _TalentData;
+export type Talent = _Talent;

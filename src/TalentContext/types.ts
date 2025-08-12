@@ -30,7 +30,7 @@ export type Position =
 
 export type ArrowDir = "left" | "right" | "down" | "right-down" | "right-down-down";
 
-interface Talent {
+export interface Talent {
   name: string;
   pos: Position;
   icon: string;
@@ -80,3 +80,7 @@ export type Action =
       type: "STATE_RESTORED";
       newState: State;
     };
+
+export interface Dictionary {
+  [key: string]: any;
+}

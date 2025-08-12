@@ -1,0 +1,20 @@
+{
+    "META_INFO": "Fill in with correct tabIds and class/spec names for easier reference",
+    "41": {
+        "Class": "Mage",
+        "Talents": "Fire"
+    },
+    "383": {
+        "Class": "Paladin",
+        "Talents": "Protection"
+    },
+    "381": {
+        "Class": "Paladin",
+        "Talents": "Retribution"
+    },
+    "361": {
+        "Class": "Hunter",
+        "Talents": "Beast Mastery"
+    },
+
+}
