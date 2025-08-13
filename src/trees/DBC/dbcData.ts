@@ -1,7 +1,7 @@
 
-import spellJson from "../DBC/Spell.json";
-import spellIconJson from "../DBC/SpellIcon.json";
-import talentJson from "../DBC/Talent.json";
+import spellJson from "../DBC/json/Spell.json";
+import spellIconJson from "../DBC/json/SpellIcon.json";
+import talentJson from "../DBC/json/Talent.json";
 import { Dictionary } from "../../TalentContext/types";
 export const spellDictionary = Array.isArray(spellJson) ? spellJson.reduce((dict, spell) => {
   dict[spell.ID] = spell;

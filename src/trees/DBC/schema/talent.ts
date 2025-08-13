@@ -1,0 +1,23 @@
+export const talentDBCSchema = {
+    ID: 'int32',
+    TabID: 'int32',
+    TierID: 'int32',
+    ColumnIndex: 'int32',
+    SpellRank_1: 'int32',
+    SpellRank_2: 'int32',
+    SpellRank_3: 'int32',
+    SpellRank_4: 'int32',
+    SpellRank_5: 'int32',
+    SpellRank_6: 'int32',
+    SpellRank_7: 'int32',
+    SpellRank_8: 'int32',
+    SpellRank_9: 'int32',
+    PrereqTalent_1: 'int32',
+    PrereqTalent_2: 'int32',
+    PrereqTalent_3: 'int32',
+    PrereqRank_1: 'int32',
+    PrereqRank_2: 'int32',
+    PrereqRank_3: 'int32',
+    Flags: 'int32',
+    RequiredSpellID: 'int32'
+};
