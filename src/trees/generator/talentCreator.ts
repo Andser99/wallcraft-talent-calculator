@@ -1,5 +1,5 @@
 
-import talentJson from "../DBC/Talent.json";
+import talentJson from "../DBC/json/Talent.json";
 import { tierToPosition } from "../../TalentContext/conversions";
 import { iconDictionary, spellDictionary, talentDictionary } from "../DBC/dbcData";
 import { Talent, TalentData } from "../../TalentContext/types";
@@ -40,6 +40,7 @@ function getHighestTalentSpellRank(id: number){
 
 function parseSpellValues(description: string, spell: any){
     if (spell !== undefined) {
+        // TODO: Replace with descriptionParser implementation and map the replacements to spell data and duration/area indexes
         description = formatDescription(description, "$s1", offsetAbs(spell["EffectBasePoints_1"]));
         description = formatDescription(description, "$s2", offsetAbs(spell["EffectBasePoints_2"]));
         description = formatDescription(description, "$s3", offsetAbs(spell["EffectBasePoints_3"]));
