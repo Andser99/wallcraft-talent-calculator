@@ -26,6 +26,7 @@ DBC files can be imported manually or automatically extracted from e.g. patch-3.
 4. Place exported jsons to `src/trees/DBC/json`
 
 ### Automatic Data Extraction
+Linux only at the moment, anyone can fill up the missing windows commands inside `extractor.ts`, exe is already included in the solution `mpqcli-windows.exe`
 1. Place `patch-3.MPQ` inside `src/trees/DBC` (check for case sensitivity in filename and path)
 2. Run `npx tsx ./src/trees/DBC/extractor.ts` from the root of the solution
 

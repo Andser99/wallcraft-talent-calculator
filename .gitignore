@@ -23,6 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 package.json
 
-src/trees/DBC/json/*
-src/trees/DBC/patch-3/*
-src/trees/DBC/patch-3.MPQ
+/src/trees/DBC/json
+/src/trees/DBC/patch-3
+/src/trees/DBC/patch-3.MPQ

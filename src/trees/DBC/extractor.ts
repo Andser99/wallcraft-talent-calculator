@@ -4,6 +4,34 @@ import { WoWDBCFile } from 'wow-dbcfile-node';
 import { spellDBCSchema } from './schema/spell';
 import { talentDBCSchema } from "./schema/talent";
 import { spellIconDBCSchema } from "./schema/spellIcon";
+import * as https from "https";
+
+function downloadPatch3MPQ(action: any) {
+const file = fs.createWriteStream("./src/trees/DBC/patch-3.MPQ");
+const request = https.get("https://vanillaplus.org/uploads/patch-3.MPQ", function(response) {
+    // @ts-ignore
+    const totalSize = parseInt(response.headers['content-length'], 10);
+    let downloaded = 0;
+    console.log(`Total size: ${totalSize} bytes`);
+    let lastPercentage = 0;
+    response.on('data', (chunk) => {
+        downloaded += chunk.length;
+        const percentage = ((downloaded / totalSize) * 100);
+
+        // Log progress every 10%
+        if (lastPercentage + 10 < percentage) {
+            lastPercentage = percentage;
+            console.log(`Downloaded: ${downloaded} bytes (${percentage.toFixed(2)}%).`);
+        }
+    });
+   response.pipe(file);
+   file.on("finish", () => {
+       file.close();
+       console.log("Download Completed.");
+       action();
+   });
+});
+}
 
 function extractDBCFromMPQ(action: any) {
     const { exec } = require('child_process');
@@ -23,8 +51,8 @@ function extractDBCFromMPQ(action: any) {
                 return;
             }
 
-            console.log(`stdout: ${stdout}`);
-            console.log(`stderr: ${stderr}`);
+            console.log(stdout);
+            console.debug(`stderr: ${stderr}`);
             action();
         });
     }
@@ -47,8 +75,11 @@ function extractDataFromDBC(sourcePath: string, targetPath: string, schema: any)
 
 // Process start here
 // Extract DBCs from MPQ first
-extractDBCFromMPQ(() => {
-    extractDataFromDBC('./src/trees/DBC/patch-3/Spell.dbc', './src/trees/DBC/json/Spell.json', spellDBCSchema);
-    extractDataFromDBC('./src/trees/DBC/patch-3/Talent.dbc', './src/trees/DBC/json/Talent.json', talentDBCSchema);
-    extractDataFromDBC('./src/trees/DBC/patch-3/SpellIcon.dbc', './src/trees/DBC/json/SpellIcon.json', spellIconDBCSchema);
-});
+downloadPatch3MPQ(() => {
+    extractDBCFromMPQ(() => {
+        extractDataFromDBC('./src/trees/DBC/patch-3/Spell.dbc', './src/trees/DBC/json/Spell.json', spellDBCSchema);
+        extractDataFromDBC('./src/trees/DBC/patch-3/Talent.dbc', './src/trees/DBC/json/Talent.json', talentDBCSchema);
+        extractDataFromDBC('./src/trees/DBC/patch-3/SpellIcon.dbc', './src/trees/DBC/json/SpellIcon.json', spellIconDBCSchema);
+    });
+})
+
