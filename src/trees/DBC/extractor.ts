@@ -8,11 +8,16 @@ import * as https from "https";
 import { spellDurationDBCSchema } from "./schema/spellDuration";
 import { spellRadiusDBCSchema } from "./schema/spellRadius";
 const skipDownload = true;
+const downloadAddress = "https://vanillaplus.org/uploads/patch-3.MPQ";
+const skipMpqExtraction = false;
 
 function downloadPatch3MPQ(action: any) {
-    if (skipDownload) action();
+    if (skipDownload) {
+        action();
+        return;
+    }
     const file = fs.createWriteStream("./src/trees/DBC/patch-3.MPQ");
-    const request = https.get("https://vanillaplus.org/uploads/patch-3.MPQ", function (response) {
+    const request = https.get(downloadAddress, function (response) {
         // @ts-ignore
         const totalSize = parseInt(response.headers['content-length'], 10);
         let downloaded = 0;
@@ -38,6 +43,10 @@ function downloadPatch3MPQ(action: any) {
 }
 
 function extractDBCFromMPQ(action: any) {
+    if (skipMpqExtraction) {
+        action();
+        return;
+    }
     const { exec } = require('child_process');
     let linuxCommands = [`./src/trees/generator/mpqcli-linux extract -f "DBFilesClient\\Talent.dbc" ./src/trees/DBC/patch-3.MPQ`,
         `./src/trees/generator/mpqcli-linux extract -f "DBFilesClient\\Spell.dbc" ./src/trees/DBC/patch-3.MPQ`,
