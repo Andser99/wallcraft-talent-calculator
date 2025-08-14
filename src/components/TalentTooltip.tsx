@@ -49,17 +49,17 @@ export const TalentTooltip = React.forwardRef<HTMLDivElement, Props>(
             {prereqData.maxRank > 1 ? "s" : ""} in {prereqData.name}
           </p>
         )}
-        {(talentData.cost != "" || talentData.cooldown != "") && (
+        {(talentData.cost !== "" || talentData.cooldown !== "") && (
           <table className="TalentTooltipTable">
             <td>
-              {talentData.cost != "" && (
+              {talentData.cost !== "" && (
                 <p>
                   {talentData.cost}
                 </p>
               )}
             </td>
             <td className="TalentTooltipColumn-cooldown">
-              {talentData.cooldown != "" && (
+              {talentData.cooldown !== "" && (
                 <p>
                   {talentData.cooldown}
                 </p>
