@@ -10,6 +10,14 @@
   white-space: pre-wrap;
 }
 
+.TalentTooltipColumn-cooldown {
+  text-align: right;
+}
+
+.TalentTooltipTable {
+  width: 100%;
+}
+
 .TalentTooltip-title {
   font-size: 1rem;
 }

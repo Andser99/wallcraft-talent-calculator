@@ -38,6 +38,8 @@ export interface Talent {
   descriptions: string[];
   maxRank: number;
   reqPoints: number;
+  cost: string,
+  cooldown: string,
   prereq?: string;
   arrows?: { dir: ArrowDir; from: Position; to: Position }[];
 }

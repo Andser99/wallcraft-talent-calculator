@@ -26,7 +26,7 @@ function generateTree(tabId: number, specName: string, className: string) {
 }
 
 function saveTree(tree: TalentData, treeName: string, className: string) {
-    console.log(tree);
+    // console.log(tree);
     fs.writeFile(`./src/trees/${className}/${treeName}.json`, JSON.stringify(tree), handleErrors);
 }
 
