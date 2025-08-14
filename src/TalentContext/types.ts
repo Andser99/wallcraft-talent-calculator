@@ -41,7 +41,13 @@ export interface Talent {
   cost: string,
   cooldown: string,
   prereq?: string;
-  arrows?: { dir: ArrowDir; from: Position; to: Position }[];
+  arrows?: Arrow[];
+}
+
+export interface Arrow {
+  dir: ArrowDir;
+  from: Position;
+  to: Position
 }
 
 export interface TalentData {

@@ -2,11 +2,13 @@
 import talentJson from "../DBC/json/Talent.json";
 import { tierToPosition } from "../../TalentContext/conversions";
 import { iconDictionary, spellDictionary, spellDurationDictionary, spellRadiusDictionary, talentDictionary } from "../DBC/dbcData";
-import { Talent, TalentData } from "../../TalentContext/types";
+import { Arrow, Talent, TalentData } from "../../TalentContext/types";
 import { parse, Replacement } from "./descriptionParser";
+import { ArrowDir } from "../../TalentContext";
 
 export function addTalentsForTabId(tree: TalentData, tabId: number, treeName: string) {
-    for (let talent of talentJson.filter(_ => _.TabID === tabId)) {
+    let specTalents = talentJson.filter(_ => _.TabID === tabId)
+    for (let talent of specTalents) {
         let spells = getSpellsForTalent(talent);
         let talentName = spells[0]["Name_enUS"] as string;
         let spellDescs = getDescriptions(spells);
@@ -20,10 +22,65 @@ export function addTalentsForTabId(tree: TalentData, tabId: number, treeName: st
             cost: getCosts(spells),
             cooldown: getCooldown(spells),
             descriptions: spellDescs,
+            arrows: getArrow(talent),
             icon: iconDictionary[spells[0]["SpellIconID"]]
         };
         tree[treeName].talents[talentName] = newTalent;
     }
+}
+
+function getArrow(talent: typeof talentJson[0]) : Arrow[] {
+    let arrows:Arrow[] = [];
+    if (talent.PrereqTalent_1 !== 0) {
+        if (talent.PrereqTalent_1 == 32)
+            console.log("WTFAAAAAAAAAAAAAAAA");
+        let prereqTalent = talentDictionary[talent.PrereqTalent_1];
+        let dir = getDirection(talent.TierID, talent.ColumnIndex, prereqTalent.TierID, prereqTalent.ColumnIndex);
+        arrows = arrows.concat(getArrows(dir, talent.TierID, talent.ColumnIndex, prereqTalent.TierID, prereqTalent.ColumnIndex));
+    }
+    // if (talent.PrereqRank_2 !== 0) {
+    //     let prereqTalent = talentDictionary[talent.PrereqTalent_2];
+    //     let dir = getDirection(talent.TierID, talent.ColumnIndex, prereqTalent.TierID, prereqTalent.ColumnIndex);
+    //     arrows.concat(getArrows(dir, talent.TierID, talent.ColumnIndex, prereqTalent.TierId, prereqTalent.ColumnIndex));
+    // }
+    return arrows;
+}
+
+function getArrows(dir: ArrowDir, toX: number, toY: number, fromX: number, fromY: number): Arrow[] {
+    let arrows: Arrow[] = [];
+    if(dir == "left") {
+        arrows.push({to: tierToPosition(toX, toY), dir: dir, from: tierToPosition(fromX, fromY)});
+        return arrows;
+    }
+    if(dir == "right") {
+        arrows.push({to: tierToPosition(toX, toY), dir: dir, from: tierToPosition(fromX, fromY)});
+        return arrows;
+    }
+    if(dir == "down") {
+        arrows.push({to: tierToPosition(toX, toY), dir: dir, from: tierToPosition(fromX, fromY)});
+        // console.log(arrows);
+        return arrows;
+    }
+    if(dir == "right-down") {
+        arrows.push({to: tierToPosition(fromX, fromY+1), dir: "right-down", from: tierToPosition(fromX, fromY)});
+        arrows.push({to: tierToPosition(toX, toY), dir: "right-down-down", from: tierToPosition(fromX, toY)});
+        return arrows;
+    }
+
+    return arrows;
+}
+
+function getDirection(toX: number, toY: number, fromX: number, fromY: number): ArrowDir {
+    if (toY > fromY && toX > fromX)
+        return "right-down";
+    if (toY > fromY) {
+        return "right";
+    }
+    if (toY < fromY)
+        return "left";
+    if (toX > fromX)
+        return "down";
+    return "down";
 }
 
 function getCooldown(spells: any) {
