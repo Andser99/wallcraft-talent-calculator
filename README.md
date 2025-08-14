@@ -13,6 +13,8 @@ Usable talent calculator hosted here: https://andser99.github.io/vanillaplus-tal
  
 ~~- Better tooltip positioning for mobile layout.~~ (Attempted fix implemented, please tell if new issues appear)
 - Make it impossible to remove talents below the needed amount of talent points according to the selected tiers.
+- Display damage ranges correctly, currently only the upper range is shown after calculating the die sides * base dice
+- Display cast time
 
 ## Importing DBC files
 DBC files can be imported manually or automatically extracted from e.g. patch-3.mpq
