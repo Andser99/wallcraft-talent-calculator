@@ -70,6 +70,27 @@ function parseColumnName(description: string, currentIndex: refNumber, replaceme
     }
     else if (symbol.toLowerCase() === 'h') {
         replacement.columnName = "ProcChance";
+        if (description[currentIndex.value + 1] >= '0' && description[currentIndex.value + 1] <= '9') {
+            currentIndex.value++;
+            replacement.replacementTemplate += parseNumber(description, currentIndex, replacement);
+        }
+    }
+    else if (symbol.toLowerCase() === 'b') {
+        replacement.columnName = "EffectPointsPerCombo_1";
+        if (description[currentIndex.value + 1] >= '0' && description[currentIndex.value + 1] <= '9') {
+            currentIndex.value++;
+            let parsedNumber = parseNumber(description, currentIndex, replacement);
+            replacement.columnName = "EffectPointsPerCombo_" + parsedNumber;
+        }
+    }
+    else if (symbol.toLowerCase() === 'o') {
+        replacement.columnName = "EffectAmplitude_1";
+        if (description[currentIndex.value + 1] >= '0' && description[currentIndex.value + 1] <= '9') {
+            currentIndex.value++;
+            let parsedNumber = parseNumber(description, currentIndex, replacement);
+            replacement.columnName = "EffectAmplitude_" + parsedNumber;
+            replacement.transform = effectAmplitudeTransform;
+        }
     }
     else if (symbol.toLowerCase() === 'd') {
         replacement.columnName = "DurationIndex";
@@ -90,6 +111,11 @@ function parseColumnName(description: string, currentIndex: refNumber, replaceme
 function effectBaseTransform(input: string) {
     let value = parseInt(input);
     return Math.abs(value + 1).toString();
+}
+
+function effectAmplitudeTransform(input: string) {
+    let value = parseInt(input);
+    return (value/1000).toString();
 }
 
 function parsePluralWording(description: string, currentIndex: refNumber, replacement: Replacement) {
