@@ -89,7 +89,7 @@ function parseColumnName(description: string, currentIndex: refNumber, replaceme
         parseA(description, currentIndex, replacement);
     }
     else if (currentSymbol === 't') {
-        parseT(replacement);
+        parseT(description, currentIndex, replacement);
     }
     else if (currentSymbol === 'l') {
         parseL(description, currentIndex, replacement);
@@ -145,8 +145,14 @@ function parseA(description: string, currentIndex: refNumber, replacement: Repla
     replacement.indexTable = "SpellRadius";
 }
 
-function parseT(replacement: Replacement) {
-    replacement.isRemoval = true;
+function parseT(description: string, currentIndex: refNumber, replacement: Replacement) {
+    "EffectAmplitude_"
+    if (description[currentIndex.value + 1] >= '0' && description[currentIndex.value + 1] <= '9') {
+        currentIndex.value++;
+        let parsedNumber = parseNumber(description, currentIndex, replacement);
+        replacement.columnName = "EffectAmplitude_" + parsedNumber;
+        replacement.transform = effectAmplitudeTransform;
+    }
 }
 
 function parseL(description: string, currentIndex: refNumber, replacement: Replacement) {
