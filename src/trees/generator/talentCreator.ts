@@ -79,6 +79,9 @@ function parseSpellValues(description: string, spell: any) {
 
 function getReplacementString(replacement: Replacement, spell: any) {
     let result = '';
+    let dieIncrease = replacement.dieIndex == 0
+        ? 0
+        : spell["EffectBaseDice_"+replacement.dieIndex] * spell["EffectDieSides_"+replacement.dieIndex];
     if (replacement.isRemoval) {
         return "";
     }
@@ -93,25 +96,26 @@ function getReplacementString(replacement: Replacement, spell: any) {
         if (replacement.indexTable != '') {
             value = lookupIndex(replacement.indexTable, spell[replacement.columnName]);
             if (replacement.indexTable == 'SpellDuration') {
-                result = effectToDuration(value, replacement.durationDivisor);
+                result = effectToDuration(value + dieIncrease, replacement.durationDivisor);
             }
             else {
-                result = value.toString();
+                result = (value + dieIncrease).toString();
             }
         }
         else {
             value = spell[replacement.columnName];
-            result = effectToDuration(value, replacement.durationDivisor);
+            result = effectToDuration(value + dieIncrease, replacement.durationDivisor);
         }
     }
     else if (replacement.indexTable != ''){
         result = lookupIndex(replacement.indexTable, spell[replacement.columnName]);
         if (replacement.indexTable == 'SpellDuration') {
-            result = msToFormattedTime(result);
+            result = msToFormattedTime(result + dieIncrease);
         }
     }
     else {
-        result = replacement.transform(spell[replacement.columnName]);
+        let value = parseInt(spell[replacement.columnName]) + dieIncrease;
+        result = replacement.transform(value.toString());
     }
 
     return result;
@@ -136,21 +140,7 @@ function lookupIndex(tableName: string, index: number) {
 }
 
 function effectToDuration(value: number, durationDiv: number) {
-    return (Math.abs(value + 1.0) / durationDiv).toString();
-}
-
-function formatDescription(description: string, toReplace: string | RegExp, columnValue: string) {
-    return description.replaceAll(toReplace, columnValue)
-}
-
-function durationIndexToSeconds(durationIndex: number) {
-    // TODO: Parse this from SpellDuration.dbc or just hardcode a dictionary, absolutely retarded shit
-    return "dIndex=" + durationIndex.toString();
-}
-
-function effectRadiusIndexToDistanceUnit(effectRadiusIndex: number) {
-    // TODO: Parse this from SpellDuration.dbc or just hardcode a dictionary, absolutely retarded shit
-    return "rIndex=" + effectRadiusIndex.toString();
+    return (Math.abs(value) / durationDiv).toString();
 }
 
 function getSpellsForTalent(talent: typeof talentJson[0]) {

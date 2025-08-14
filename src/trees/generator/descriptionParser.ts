@@ -4,37 +4,42 @@ export function parse(description: string) {
 }
 
 function parseDescriptions(description: string) {
-    let data = Array<Replacement>();
+    let replacementsArray = Array<Replacement>();
     let currentIndex: refNumber = { value: 0 };
     while (currentIndex.value < description.length) {
-        parseBeginning(description, currentIndex, data);
+        parseBeginning(description, currentIndex, replacementsArray);
         currentIndex.value++;
     }
-    return data;
+    return replacementsArray;
 }
 
-function parseBeginning(description: string, currentIndex: refNumber, data: Array<Replacement>) {
+function parseBeginning(description: string, currentIndex: refNumber, replacementsArray: Array<Replacement>) {
     let symbol = description[currentIndex.value];
     if (symbol == '$') {
-        let replacement: Replacement = {
-            spellId: -1,
-            columnName: "",
-            durationDivisor: 0,
-            replacementTemplate: "",
-            indexTable: "",
-            singularWord: "",
-            pluralWord: "",
-            isRemoval: false,
-            transform: (input) => input
-        };
+        let replacement = getNewReplacement();
         replacement.replacementTemplate += symbol;
         currentIndex.value++;
 
         parseDuration(description, currentIndex, replacement);
         parseSpellId(description, currentIndex, replacement);
         parseColumnName(description, currentIndex, replacement);
-        data.push(replacement);
+        replacementsArray.push(replacement);
     }
+}
+
+function getNewReplacement(): Replacement {
+    return {
+        spellId: -1,
+        columnName: "",
+        durationDivisor: 0,
+        replacementTemplate: "",
+        indexTable: "",
+        singularWord: "",
+        pluralWord: "",
+        isRemoval: false,
+        dieIndex: 0,
+        transform: (input) => input
+    };
 }
 
 function parseDuration(description: string, currentIndex: refNumber, replacement: Replacement) {
@@ -64,53 +69,93 @@ function parseSpellId(description: string, currentIndex: refNumber, replacement:
 function parseColumnName(description: string, currentIndex: refNumber, replacement: Replacement) {
     let symbol = description[currentIndex.value];
     replacement.replacementTemplate += symbol;
-    if (symbol.toLowerCase() === 's') {
-        parseEffectBasePoints(description, currentIndex, replacement);
-        replacement.transform = effectBaseTransform;
+    const currentSymbol = symbol.toLowerCase();
+    if (currentSymbol === 's') {
+        parseS(description, currentIndex, replacement);
     }
-    else if (symbol.toLowerCase() === 'h') {
-        replacement.columnName = "ProcChance";
-        if (description[currentIndex.value + 1] >= '0' && description[currentIndex.value + 1] <= '9') {
-            currentIndex.value++;
-            replacement.replacementTemplate += parseNumber(description, currentIndex, replacement);
-        }
+    else if (currentSymbol === 'h') {
+        parseH(replacement, description, currentIndex);
     }
-    else if (symbol.toLowerCase() === 'b') {
-        replacement.columnName = "EffectPointsPerCombo_1";
-        if (description[currentIndex.value + 1] >= '0' && description[currentIndex.value + 1] <= '9') {
-            currentIndex.value++;
-            let parsedNumber = parseNumber(description, currentIndex, replacement);
-            replacement.columnName = "EffectPointsPerCombo_" + parsedNumber;
-        }
+    else if (currentSymbol === 'b') {
+        parseB(replacement, description, currentIndex);
     }
-    else if (symbol.toLowerCase() === 'o') {
-        replacement.columnName = "EffectAmplitude_1";
-        if (description[currentIndex.value + 1] >= '0' && description[currentIndex.value + 1] <= '9') {
-            currentIndex.value++;
-            let parsedNumber = parseNumber(description, currentIndex, replacement);
-            replacement.columnName = "EffectAmplitude_" + parsedNumber;
-            replacement.transform = effectAmplitudeTransform;
-        }
+    else if (currentSymbol === 'o') {
+        parseO(replacement, description, currentIndex);
     }
-    else if (symbol.toLowerCase() === 'd') {
-        replacement.columnName = "DurationIndex";
-        replacement.indexTable = "SpellDuration";
+    else if (currentSymbol === 'd') {
+        parseD(replacement);
     }
-    else if (symbol.toLowerCase() === 'a') {
-        parseEffectRadiusIndex(description, currentIndex, replacement);
-        replacement.indexTable = "SpellRadius";
+    else if (currentSymbol === 'a') {
+        parseA(description, currentIndex, replacement);
     }
-    else if (symbol.toLowerCase() === 't') {
-        replacement.isRemoval = true;
+    else if (currentSymbol === 't') {
+        parseT(replacement);
     }
-    else if (symbol.toLowerCase() === 'l') {
-        parsePluralWording(description, currentIndex, replacement);
+    else if (currentSymbol === 'l') {
+        parseL(description, currentIndex, replacement);
     }
+    else if (currentSymbol === 'u') {
+        parseU(replacement);
+    }
+}
+
+function parseU(replacement: Replacement) {
+    replacement.columnName = "StackAmount";
+}
+
+function parseS(description: string, currentIndex: refNumber, replacement: Replacement) {
+    parseEffectBasePoints(description, currentIndex, replacement);
+    replacement.transform = effectBaseTransform;
+}
+
+function parseH(replacement: Replacement, description: string, currentIndex: refNumber) {
+    replacement.columnName = "ProcChance";
+    if (description[currentIndex.value + 1] >= '0' && description[currentIndex.value + 1] <= '9') {
+        currentIndex.value++;
+        replacement.replacementTemplate += parseNumber(description, currentIndex, replacement);
+    }
+}
+
+function parseB(replacement: Replacement, description: string, currentIndex: refNumber) {
+    replacement.columnName = "EffectPointsPerCombo_1";
+    if (description[currentIndex.value + 1] >= '0' && description[currentIndex.value + 1] <= '9') {
+        currentIndex.value++;
+        let parsedNumber = parseNumber(description, currentIndex, replacement);
+        replacement.columnName = "EffectPointsPerCombo_" + parsedNumber;
+    }
+}
+
+function parseO(replacement: Replacement, description: string, currentIndex: refNumber) {
+    replacement.columnName = "EffectAmplitude_1";
+    if (description[currentIndex.value + 1] >= '0' && description[currentIndex.value + 1] <= '9') {
+        currentIndex.value++;
+        let parsedNumber = parseNumber(description, currentIndex, replacement);
+        replacement.columnName = "EffectAmplitude_" + parsedNumber;
+        replacement.transform = effectAmplitudeTransform;
+    }
+}
+
+function parseD(replacement: Replacement) {
+    replacement.columnName = "DurationIndex";
+    replacement.indexTable = "SpellDuration";
+}
+
+function parseA(description: string, currentIndex: refNumber, replacement: Replacement) {
+    parseEffectRadiusIndex(description, currentIndex, replacement);
+    replacement.indexTable = "SpellRadius";
+}
+
+function parseT(replacement: Replacement) {
+    replacement.isRemoval = true;
+}
+
+function parseL(description: string, currentIndex: refNumber, replacement: Replacement) {
+    parsePluralWording(description, currentIndex, replacement);
 }
 
 function effectBaseTransform(input: string) {
     let value = parseInt(input);
-    return Math.abs(value + 1).toString();
+    return Math.abs(value).toString();
 }
 
 function effectAmplitudeTransform(input: string) {
@@ -140,12 +185,15 @@ function parseEffectBasePoints(description: string, currentIndex: refNumber, rep
     switch (symbol) {
         case '1':
             replacement.columnName = "EffectBasePoints_1";
+            replacement.dieIndex = 1;
             break;
         case '2':
             replacement.columnName = "EffectBasePoints_2";
+            replacement.dieIndex = 2;
             break;
         case '3':
             replacement.columnName = "EffectBasePoints_3";
+            replacement.dieIndex = 3;
             break;
     }
     replacement.replacementTemplate += symbol;
@@ -190,15 +238,16 @@ export interface Replacement {
     singularWord: string,
     pluralWord: string,
     isRemoval: boolean,
+    dieIndex: number,
     transform: (input: string) => string
 }
 
+
+// Test functions, run using `npx tsx <path_to_this_file>`
 function testParse() {
-    let test1 = "Fills the $lPaladin:paladins; with divine fury for $d, causing melee attacks to deal additional physical damage equal to $34092s1% of normal weapon damage to all targets in front of the Paladin. Only one Seal can be active on the Paladin at any one time.\n";
-    // test1 = "$/100;123s1";
+    let test1 = "Fills the $lPaladin:paladins; with $d, equal to $34092s1% of Paladin. $/1000;S1, $u $o $t $d $b.\n";
     let replacements = parse(test1);
     console.log(replacements);
-    console.log("done");
 }
 
 testParse();
