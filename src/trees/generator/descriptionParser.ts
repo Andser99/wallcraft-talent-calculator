@@ -97,6 +97,9 @@ function parseColumnName(description: string, currentIndex: refNumber, replaceme
     else if (currentSymbol === 'u') {
         parseU(replacement);
     }
+    else if (currentSymbol === 'n') {
+        parseN(replacement);
+    }
 }
 
 function parseU(replacement: Replacement) {
@@ -157,6 +160,10 @@ function parseT(description: string, currentIndex: refNumber, replacement: Repla
 
 function parseL(description: string, currentIndex: refNumber, replacement: Replacement) {
     parsePluralWording(description, currentIndex, replacement);
+}
+
+function parseN(replacement: Replacement) {
+    replacement.columnName = "ProcCharges";
 }
 
 function effectBaseTransform(input: string) {

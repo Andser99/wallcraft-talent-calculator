@@ -41,7 +41,15 @@ function getCosts(spells: any) {
     let spell = spells[0];
     if (spell["ManaCost"] != 0) {
         // TODO: write correct resource name
-        return spell["ManaCost"] + " Mana";
+        if (spell["PowerType"] === 0) {
+            return spell["ManaCost"] + " Mana";
+        }
+        if (spell["PowerType"] === 1) {
+            return spell["ManaCost"] / 10 + " Rage";
+        }
+        if (spell["PowerType"] === 3) {
+            return spell["ManaCost"] + " Energy";
+        }
     }
     else if (spell["ManaCostPct"] != 0) {
         return spell["ManaCostPct"] + "% Base Mana";
@@ -78,18 +86,18 @@ function parseSpellValues(description: string, spell: any) {
 }
 
 function getReplacementString(replacement: Replacement, spell: any) {
+    if (replacement.spellId !== -1) {
+        spell = spellDictionary[replacement.spellId];
+    }
     let result = '';
     let dieIncrease = replacement.dieIndex == 0
         ? 0
-        : spell["EffectBaseDice_"+replacement.dieIndex] * spell["EffectDieSides_"+replacement.dieIndex];
+        : spell["EffectBaseDice_" + replacement.dieIndex] * spell["EffectDieSides_" + replacement.dieIndex];
     if (replacement.isRemoval) {
         return "";
     }
     if (replacement.singularWord != "") {
         return parseInt(spell[replacement.columnName]) > 1 ? replacement.pluralWord : replacement.singularWord;
-    }
-    if (replacement.spellId !== -1) {
-        spell = spellDictionary[replacement.spellId];
     }
     if (replacement.durationDivisor != 0) {
         let value = 0;
