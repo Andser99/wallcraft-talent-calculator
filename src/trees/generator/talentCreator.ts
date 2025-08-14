@@ -73,23 +73,18 @@ function parseSpellValues(description: string, spell: any) {
             let replacementString = getReplacementString(replacement, spell);
             description = description.replaceAll(replacement.replacementTemplate, replacementString);
         }
-        // description = formatDescription(description, "$s1", offsetAbs(spell["EffectBasePoints_1"]));
-        // description = formatDescription(description, "$s2", offsetAbs(spell["EffectBasePoints_2"]));
-        // description = formatDescription(description, "$s3", offsetAbs(spell["EffectBasePoints_3"]));
-        // description = formatDescription(description, "$h", spell["ProcChance"]);
-        // description = formatDescription(description, "$d", durationIndexToSeconds(spell["DurationIndex"]));
-        // description = formatDescription(description, "$a1", effectRadiusIndexToDistanceUnit(spell["EffectRadiusIndex_1"]));
-        // description = formatDescription(description, "$a2", effectRadiusIndexToDistanceUnit(spell["EffectRadiusIndex_2"]));
-        // // Absolutely vile hardcoded duration parsing, works only for /1000, try to regex parse this duration and send as param
-        // description = formatDescription(description, RegExp(/\$\/1000*;[sS]1/gm), effectToDuration(spell["EffectBasePoints_1"], 1000));
-        // description = formatDescription(description, RegExp(/\$\/1000*;[sS]2/gm), effectToDuration(spell["EffectBasePoints_2"], 1000));
-        // description = formatDescription(description, RegExp(/\$\/1000*;[sS]3/gm), effectToDuration(spell["EffectBasePoints_3"], 1000));
     }
     return description;
 }
 
 function getReplacementString(replacement: Replacement, spell: any) {
     let result = '';
+    if (replacement.isRemoval) {
+        return "";
+    }
+    if (replacement.singularWord != "") {
+        return parseInt(spell[replacement.columnName]) > 1 ? replacement.pluralWord : replacement.singularWord;
+    }
     if (replacement.spellId !== -1) {
         spell = spellDictionary[replacement.spellId];
     }

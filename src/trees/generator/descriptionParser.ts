@@ -22,6 +22,9 @@ function parseBeginning(description: string, currentIndex: refNumber, data: Arra
             durationDivisor: 0,
             replacementTemplate: "",
             indexTable: "",
+            singularWord: "",
+            pluralWord: "",
+            isRemoval: false,
             transform: (input) => input
         };
         replacement.replacementTemplate += symbol;
@@ -76,11 +79,33 @@ function parseColumnName(description: string, currentIndex: refNumber, replaceme
         parseEffectRadiusIndex(description, currentIndex, replacement);
         replacement.indexTable = "SpellRadius";
     }
+    else if (symbol.toLowerCase() === 't') {
+        replacement.isRemoval = true;
+    }
+    else if (symbol.toLowerCase() === 'l') {
+        parsePluralWording(description, currentIndex, replacement);
+    }
 }
 
 function effectBaseTransform(input: string) {
     let value = parseInt(input);
     return Math.abs(value + 1).toString();
+}
+
+function parsePluralWording(description: string, currentIndex: refNumber, replacement: Replacement) {
+    currentIndex.value++;
+    let indexOfSemicolon = description.indexOf(';', currentIndex.value);
+    let split = description.substring(currentIndex.value).split(':');
+    let singular = split[0];
+    replacement.replacementTemplate += singular;
+    let plural = split[1].split(';')[0];
+    replacement.replacementTemplate += ":";
+    replacement.replacementTemplate += plural;
+    replacement.singularWord = singular;
+    replacement.pluralWord = plural;
+    replacement.replacementTemplate += ';';
+    currentIndex.value = indexOfSemicolon;
+    replacement.columnName = "EffectBasePoints_1";
 }
 
 function parseEffectBasePoints(description: string, currentIndex: refNumber, replacement: Replacement) {
@@ -136,11 +161,14 @@ export interface Replacement {
     durationDivisor: number,
     replacementTemplate: string,
     indexTable: string,
+    singularWord: string,
+    pluralWord: string,
+    isRemoval: boolean,
     transform: (input: string) => string
 }
 
 function testParse() {
-    let test1 = "Fills the Paladin with divine fury for $d, causing melee attacks to deal additional physical damage equal to $34092s1% of normal weapon damage to all targets in front of the Paladin. Only one Seal can be active on the Paladin at any one time.\n";
+    let test1 = "Fills the $lPaladin:paladins; with divine fury for $d, causing melee attacks to deal additional physical damage equal to $34092s1% of normal weapon damage to all targets in front of the Paladin. Only one Seal can be active on the Paladin at any one time.\n";
     // test1 = "$/100;123s1";
     let replacements = parse(test1);
     console.log(replacements);
