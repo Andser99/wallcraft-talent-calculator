@@ -69,15 +69,15 @@ export const TalentTooltip = React.forwardRef<HTMLDivElement, Props>(
         )}
         <p className="TalentTooltip-description">
           {rank === 0
-            ? talentData.description(rank + 1)
-            : talentData.description(rank)}
+            ? talentData.description(rank + 1, state)
+            : talentData.description(rank, state)}
         </p>
         {rank !== 0 && rank < talentData.maxRank && (
           <>
             <br />
             <p>Next rank:</p>
             <p className="TalentTooltip-description">
-              {talentData.description(rank + 1)}
+              {talentData.description(rank + 1, state)}
             </p>
           </>
         )}

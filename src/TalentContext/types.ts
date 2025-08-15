@@ -34,8 +34,9 @@ export interface Talent {
   name: string;
   pos: Position;
   icon: string;
-  description: (points: number) => string;
-  descriptions: string[];
+  description: (points: number, state: State) => string;
+  descriptions: string[][];
+  dependencyName: string;
   maxRank: number;
   reqPoints: number;
   cost: string,

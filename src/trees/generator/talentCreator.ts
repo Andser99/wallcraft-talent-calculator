@@ -5,6 +5,7 @@ import { iconDictionary, spellDictionary, spellDurationDictionary, spellRadiusDi
 import { Arrow, Talent, TalentData } from "../../TalentContext/types";
 import { parse, Replacement } from "./descriptionParser";
 import { ArrowDir } from "../../TalentContext";
+import patchJson from "./manualTalentPatches.json";
 
 export function addTalentsForTabId(tree: TalentData, tabId: number, treeName: string) {
     let specTalents = talentJson.filter(_ => _.TabID === tabId)
@@ -19,30 +20,42 @@ export function addTalentsForTabId(tree: TalentData, tabId: number, treeName: st
             reqPoints: talent.TierID * 5,
             prereq: talent.PrereqTalent_1 !== 0 ? getHighestTalentSpellRank(talentDictionary[talent.PrereqTalent_1]["ID"]) : undefined,
             description: () => "",
+            dependencyName: "",
             cost: getCosts(spells),
             cooldown: getCooldown(spells),
-            descriptions: spellDescs,
+            descriptions: [spellDescs],
             arrows: getArrow(talent),
             icon: iconDictionary[spells[0]["SpellIconID"]]
         };
         tree[treeName].talents[talentName] = newTalent;
+        patch(newTalent);
+    }
+}
+
+// TODO: Get rid of this bullshit and parse spell dependencies properly
+// The idea is to build a real solution for talents affecting each other with spell masks
+function patch(talent: Talent) {
+    if (Object.keys(patchJson).includes(talent.name)) {
+        for (let patch of patchJson[talent.name as keyof typeof patchJson]) {
+            // Ugly modification without types
+            //@ts-ignore
+            talent[patch.property as keyof typeof talent] = patch.value;
+        }
     }
 }
 
 function getArrow(talent: typeof talentJson[0]) : Arrow[] {
     let arrows:Arrow[] = [];
     if (talent.PrereqTalent_1 !== 0) {
-        if (talent.PrereqTalent_1 == 32)
-            console.log("WTFAAAAAAAAAAAAAAAA");
         let prereqTalent = talentDictionary[talent.PrereqTalent_1];
         let dir = getDirection(talent.TierID, talent.ColumnIndex, prereqTalent.TierID, prereqTalent.ColumnIndex);
         arrows = arrows.concat(getArrows(dir, talent.TierID, talent.ColumnIndex, prereqTalent.TierID, prereqTalent.ColumnIndex));
     }
-    // if (talent.PrereqRank_2 !== 0) {
-    //     let prereqTalent = talentDictionary[talent.PrereqTalent_2];
-    //     let dir = getDirection(talent.TierID, talent.ColumnIndex, prereqTalent.TierID, prereqTalent.ColumnIndex);
-    //     arrows.concat(getArrows(dir, talent.TierID, talent.ColumnIndex, prereqTalent.TierId, prereqTalent.ColumnIndex));
-    // }
+    if (talent.PrereqRank_2 !== 0) {
+        let prereqTalent = talentDictionary[talent.PrereqTalent_2];
+        let dir = getDirection(talent.TierID, talent.ColumnIndex, prereqTalent.TierID, prereqTalent.ColumnIndex);
+        arrows.concat(getArrows(dir, talent.TierID, talent.ColumnIndex, prereqTalent.TierId, prereqTalent.ColumnIndex));
+    }
     return arrows;
 }
 
