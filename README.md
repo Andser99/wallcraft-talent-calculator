@@ -27,22 +27,32 @@ DBC files can be imported manually or automatically extracted from e.g. patch-3.
 3. Repeat for `SpellIcon.dbc`, `Talent.dbc`
 4. Place exported jsons to `src/trees/DBC/json`
 
-### Automatic Data Extraction
-Linux only at the moment, anyone can fill up the missing windows commands inside `extractor.ts`, exe is already included in the solution `mpqcli-windows.exe`. There is `const skipDownload = true;` row in the `extractor.ts` that is used to download the Vanilla+ patch-3.mpq directly from the website if set to false.
+## Automatic Data Extraction
+Linux only at the moment, anyone can fill up the missing windows commands inside [extractor.ts](/src/trees/DBC/extractor.ts), exe is already included in the solution `mpqcli-windows.exe`. There is `const skipDownload = true;` row in the [extractor.ts](/src/trees/DBC/extractor.ts) that is used to download the Vanilla+ patch-3.mpq directly from the website if set to false.
 1. Place `patch-3.MPQ` inside `src/trees/DBC` (check for case sensitivity in filename and path)
 2. Run `npx tsx ./src/trees/DBC/extractor.ts` from the root of the solution
 
-### Extractor Components
-1. Downloader - can be disabled in `extractor.ts` and address configured.
-2. MPQ Extractor - can be disabled in `extractor.ts`
+### Process
+1. Downloader - can be disabled in [extractor.ts](/src/trees/DBC/extractor.ts) and address configured.
+↓
+2. MPQ Extractor - can be disabled in [extractor.ts](/src/trees/DBC/extractor.ts)
+↓
 3. DBC Extractor - always enabled when extracting.
 
 ## Generating Talent Trees
 Trees are generated based on dbc files located at in src/trees/DBC
 To generate talent trees run the following command from the root of the solution:
-`npx tsx ./src/trees/generator/generateTrees.ts`
+
+```npx tsx ./src/trees/generator/generateTrees.ts```
+
 You can view generated talent trees in each class' respective folder, these can be edited manually and are never generated automatically.
 `src/trees/<class name>/<specialization name>.json`
+
+
+## Patching Generated Trees
+Until the full scope of spell mask effects and dependencies between talents are implemented in the tree generator, there is an option to apply a manually generated patch for individual talents in [manualTalentPatches.json](./src/trees/generator/manualTalentPatches.json)
+These are applied after the talent tree is generated and can be used to fill in missing features or replace incorrectly generated descriptions.
+⚠️ It is highly recommended to use the patch file instead of manually editing the generated trees to avoid losing your edits.
 
 ## Acknowledgments
 MPQ Extraction CLI by https://github.com/TheGrayDot/mpqcli
