@@ -2,7 +2,7 @@
   "name": "talent-calc",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://andser99.github.io/vanillaplus-talent-calculator",
+  "homepage": "https://andser99.github.io/wallcraft-talent-calculator",
   "dependencies": {
     "-": "0.0.1",
     "@ldcv/stormjs": "^0.5.10",

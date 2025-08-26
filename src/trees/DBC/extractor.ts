@@ -87,16 +87,20 @@ function extractDataFromDBC(sourcePath: string, targetPath: string, schema: any)
     console.log('Writing JSON file ' + sourcePath);
     fs.writeFileSync(targetPath, JSON.stringify(allJson));
 }
-
-// Process start here
-// Extract DBCs from MPQ first
-downloadPatch3MPQ(() => {
-    extractDBCFromMPQ(() => {
-        extractDataFromDBC('./src/trees/DBC/patch-3/Spell.dbc', './src/trees/DBC/json/Spell.json', spellDBCSchema);
+extractDataFromDBC('./src/trees/DBC/patch-3/Spell.dbc', './src/trees/DBC/json/Spell.json', spellDBCSchema);
         extractDataFromDBC('./src/trees/DBC/patch-3/Talent.dbc', './src/trees/DBC/json/Talent.json', talentDBCSchema);
         extractDataFromDBC('./src/trees/DBC/patch-3/SpellIcon.dbc', './src/trees/DBC/json/SpellIcon.json', spellIconDBCSchema);
         extractDataFromDBC('./src/trees/DBC/patch-3/SpellDuration.dbc', './src/trees/DBC/json/SpellDuration.json', spellDurationDBCSchema);
         extractDataFromDBC('./src/trees/DBC/patch-3/SpellRadius.dbc', './src/trees/DBC/json/SpellRadius.json', spellRadiusDBCSchema);
-    });
-})
+// Process start here
+// Extract DBCs from MPQ first
+// downloadPatch3MPQ(() => {
+//     extractDBCFromMPQ(() => {
+//         extractDataFromDBC('./src/trees/DBC/patch-3/Spell.dbc', './src/trees/DBC/json/Spell.json', spellDBCSchema);
+//         extractDataFromDBC('./src/trees/DBC/patch-3/Talent.dbc', './src/trees/DBC/json/Talent.json', talentDBCSchema);
+//         extractDataFromDBC('./src/trees/DBC/patch-3/SpellIcon.dbc', './src/trees/DBC/json/SpellIcon.json', spellIconDBCSchema);
+//         extractDataFromDBC('./src/trees/DBC/patch-3/SpellDuration.dbc', './src/trees/DBC/json/SpellDuration.json', spellDurationDBCSchema);
+//         extractDataFromDBC('./src/trees/DBC/patch-3/SpellRadius.dbc', './src/trees/DBC/json/SpellRadius.json', spellRadiusDBCSchema);
+//     });
+// })
 
