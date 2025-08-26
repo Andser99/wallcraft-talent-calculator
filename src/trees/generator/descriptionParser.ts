@@ -100,6 +100,18 @@ function parseColumnName(description: string, currentIndex: refNumber, replaceme
     else if (currentSymbol === 'n') {
         parseN(replacement);
     }
+    else if (currentSymbol === 'x') {
+        parseX(replacement, description, currentIndex);
+    }
+}
+
+function parseX(replacement: Replacement, description: string, currentIndex: refNumber) {
+    replacement.columnName = "EffectChainTarget_1";
+    if (description[currentIndex.value + 1] >= '0' && description[currentIndex.value + 1] <= '9') {
+        currentIndex.value++;
+        let parsedNumber = parseNumber(description, currentIndex, replacement);
+        replacement.columnName = "EffectChainTarget_" + parsedNumber;
+    }
 }
 
 function parseU(replacement: Replacement) {
