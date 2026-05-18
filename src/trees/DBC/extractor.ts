@@ -7,7 +7,7 @@ import { spellIconDBCSchema } from "./schema/spellIcon";
 import * as https from "https";
 import { spellDurationDBCSchema } from "./schema/spellDuration";
 import { spellRadiusDBCSchema } from "./schema/spellRadius";
-const skipDownload = true;
+const skipDownload = false;
 const downloadAddress = "https://vanillaplus.org/uploads/patch-3.MPQ";
 const skipMpqExtraction = false;
 
@@ -48,11 +48,11 @@ function extractDBCFromMPQ(action: any) {
         return;
     }
     const { exec } = require('child_process');
-    let linuxCommands = [`./src/trees/generator/mpqcli-linux extract -f "DBFilesClient\\Talent.dbc" ./src/trees/DBC/patch-3.MPQ`,
-        `./src/trees/generator/mpqcli-linux extract -f "DBFilesClient\\Spell.dbc" ./src/trees/DBC/patch-3.MPQ`,
-        `./src/trees/generator/mpqcli-linux extract -f "DBFilesClient\\SpellIcon.dbc" ./src/trees/DBC/patch-3.MPQ`,
-        `./src/trees/generator/mpqcli-linux extract -f "DBFilesClient\\SpellDuration.dbc" ./src/trees/DBC/patch-3.MPQ`,
-        `./src/trees/generator/mpqcli-linux extract -f "DBFilesClient\\SpellRadius.dbc" ./src/trees/DBC/patch-3.MPQ`
+    let linuxCommands = [`./src/trees/generator/mpqcli-linux extract -f "DBFilesClient\\Talent.dbc" ./src/trees/DBC/patch-8.mpq`,
+        `./src/trees/generator/mpqcli-linux extract -f "DBFilesClient\\Spell.dbc" ./src/trees/DBC/patch-8.mpq`,
+        `./src/trees/generator/mpqcli-linux extract -f "DBFilesClient\\SpellIcon.dbc" ./src/trees/DBC/patch-8.mpq`,
+        `./src/trees/generator/mpqcli-linux extract -f "DBFilesClient\\SpellDuration.dbc" ./src/trees/DBC/patch-8.mpq`,
+        `./src/trees/generator/mpqcli-linux extract -f "DBFilesClient\\SpellRadius.dbc" ./src/trees/DBC/patch-8.mpq`
     ];
     // TODO Add windows command to extract MPQ
     let winCommands = [''];
@@ -84,23 +84,19 @@ function extractDataFromDBC(sourcePath: string, targetPath: string, schema: any)
     for (let index = 0; index < header.record_count; index++) {
         allJson.push(dbc.getRecord(index));
     }
-    console.log('Writing JSON file ' + sourcePath);
+    console.log('Writing JSON file ' + sourcePath + ' to ' + targetPath);
     fs.writeFileSync(targetPath, JSON.stringify(allJson));
 }
-extractDataFromDBC('./src/trees/DBC/patch-3/Spell.dbc', './src/trees/DBC/json/Spell.json', spellDBCSchema);
-        extractDataFromDBC('./src/trees/DBC/patch-3/Talent.dbc', './src/trees/DBC/json/Talent.json', talentDBCSchema);
-        extractDataFromDBC('./src/trees/DBC/patch-3/SpellIcon.dbc', './src/trees/DBC/json/SpellIcon.json', spellIconDBCSchema);
-        extractDataFromDBC('./src/trees/DBC/patch-3/SpellDuration.dbc', './src/trees/DBC/json/SpellDuration.json', spellDurationDBCSchema);
-        extractDataFromDBC('./src/trees/DBC/patch-3/SpellRadius.dbc', './src/trees/DBC/json/SpellRadius.json', spellRadiusDBCSchema);
+
 // Process start here
 // Extract DBCs from MPQ first
 // downloadPatch3MPQ(() => {
-//     extractDBCFromMPQ(() => {
-//         extractDataFromDBC('./src/trees/DBC/patch-3/Spell.dbc', './src/trees/DBC/json/Spell.json', spellDBCSchema);
-//         extractDataFromDBC('./src/trees/DBC/patch-3/Talent.dbc', './src/trees/DBC/json/Talent.json', talentDBCSchema);
-//         extractDataFromDBC('./src/trees/DBC/patch-3/SpellIcon.dbc', './src/trees/DBC/json/SpellIcon.json', spellIconDBCSchema);
-//         extractDataFromDBC('./src/trees/DBC/patch-3/SpellDuration.dbc', './src/trees/DBC/json/SpellDuration.json', spellDurationDBCSchema);
-//         extractDataFromDBC('./src/trees/DBC/patch-3/SpellRadius.dbc', './src/trees/DBC/json/SpellRadius.json', spellRadiusDBCSchema);
-//     });
+    // extractDBCFromMPQ(() => {
+        extractDataFromDBC('./src/trees/DBC/patch-8/Spell.dbc', './src/trees/DBC/json/Spell.json', spellDBCSchema);
+        extractDataFromDBC('./src/trees/DBC/patch-8/Talent.dbc', './src/trees/DBC/json/Talent.json', talentDBCSchema);
+        extractDataFromDBC('./src/trees/DBC/patch-8/SpellIcon.dbc', './src/trees/DBC/json/SpellIcon.json', spellIconDBCSchema);
+        extractDataFromDBC('./src/trees/DBC/patch-8/SpellDuration.dbc', './src/trees/DBC/json/SpellDuration.json', spellDurationDBCSchema);
+        extractDataFromDBC('./src/trees/DBC/patch-8/SpellRadius.dbc', './src/trees/DBC/json/SpellRadius.json', spellRadiusDBCSchema);
+    // });
 // })
 

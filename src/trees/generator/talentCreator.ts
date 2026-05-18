@@ -1,13 +1,13 @@
 
 import talentJson from "../DBC/json/Talent.json";
 import { tierToPosition } from "../../TalentContext/conversions";
-import { iconDictionary, spellDictionary, spellDurationDictionary, spellRadiusDictionary, talentDictionary } from "../DBC/dbcData";
-import { Arrow, Talent, TalentData } from "../../TalentContext/types";
+import { iconDictionary, spellCastTimeDictionary, spellDictionary, spellDurationDictionary, spellRadiusDictionary, talentDictionary } from "../DBC/dbcData";
+import { Arrow, Talent, TalentData, TalentVersion } from "../../TalentContext/types";
 import { parse, Replacement } from "./descriptionParser";
 import { ArrowDir } from "../../TalentContext";
 import patchJson from "./manualTalentPatches.json";
 
-export function addTalentsForTabId(tree: TalentData, tabId: number, treeName: string) {
+export function addTalentsForTabId(tree: TalentVersion, tabId: number, treeName: string) {
     let specTalents = talentJson.filter(_ => _.TabID === tabId)
     for (let talent of specTalents) {
         let spells = getSpellsForTalent(talent);
@@ -23,11 +23,12 @@ export function addTalentsForTabId(tree: TalentData, tabId: number, treeName: st
             dependencyName: "",
             cost: getCosts(spells),
             cooldown: getCooldown(spells),
+            castTime: getCastTime(spells),
             descriptions: [spellDescs],
             arrows: getArrow(talent),
             icon: iconDictionary[spells[0]["SpellIconID"]]
         };
-        tree[treeName].talents[talentName] = newTalent;
+        tree.talents[talentName] = newTalent;
         patch(newTalent);
     }
 }
@@ -105,6 +106,19 @@ function getCooldown(spells: any) {
         return msToFormattedTime(spell["RecoveryTime"]) + " cooldown";
     }
     return "";
+}
+
+function getCastTime(spells: any) {
+    let spell = spells[0];
+    console.log(spell);
+    if (spell["CastingTimeIndex"] > 1) {
+        console.log(spell["Name_enUS"]+ "spell has cast time index of: " + spell["CastingTimeIndex"]);
+        let castTimeMs = lookupIndex("SpellCastTime", spell["CastingTimeIndex"]);
+        console.log("ms cast time from index lookup: " + castTimeMs);
+        if (castTimeMs == 0) return "";
+        return msToFormattedTimeCastTime(castTimeMs);
+    }
+    return spell["ManaCost"] != 0 || spell["ManaCostPct"] != 0 ? "Instant cast" : "";
 }
 
 function getCosts(spells: any) {
@@ -208,9 +222,16 @@ function msToFormattedTime(time: string) {
     return timeNumber / 1000 + " seconds";
 }
 
+function msToFormattedTimeCastTime(time: string) {
+    let timeNumber = parseFloat(time);
+    let seconds = timeNumber / 1000;
+    return "Cast time: " + seconds.toFixed(1) + " seconds";
+}
+
 const indexMap: Record<string, any> = {
     "SpellDuration": { dict: spellDurationDictionary, column: "Duration"},
-    "SpellRadius": { dict: spellRadiusDictionary, column: "Radius"}
+    "SpellRadius": { dict: spellRadiusDictionary, column: "Radius" },
+    "SpellCastTime": { dict: spellCastTimeDictionary, column: "Base" }
 }
 function lookupIndex(tableName: string, index: number) {
     let map = indexMap[tableName];
